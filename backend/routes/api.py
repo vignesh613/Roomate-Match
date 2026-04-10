@@ -1,8 +1,8 @@
 from fastapi import APIRouter, HTTPException
-from models.models import Listing, MatchRequest
-from db.database import db
-from ai_agents.matching_agent import matching_agent
-from ai_agents.trust_agent import trust_agent
+from backend.models.models import Listing, MatchRequest
+from backend.db.database import db
+from backend.ai_agents.matching_agent import matching_agent
+from backend.ai_agents.trust_agent import trust_agent
 from typing import List
 import os
 

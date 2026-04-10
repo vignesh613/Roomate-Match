@@ -3,7 +3,7 @@ import chromadb
 from chromadb.config import Settings
 from chromadb.utils import embedding_functions
 import pandas as pd
-from models.models import Listing
+from backend.models.models import Listing
 import os
 
 class Database:

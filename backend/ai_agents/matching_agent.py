@@ -4,8 +4,8 @@ from langchain_core.output_parsers import StrOutputParser
 from langgraph.graph import StateGraph, END
 from typing import TypedDict, List
 import os
-from db.database import db
-from models.models import MatchRequest, MatchResult, Listing
+from backend.db.database import db
+from backend.models.models import MatchRequest, MatchResult, Listing
 
 class MatchingState(TypedDict):
     request: MatchRequest

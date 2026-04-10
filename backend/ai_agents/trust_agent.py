@@ -3,7 +3,7 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from langgraph.graph import StateGraph, END
 from typing import TypedDict, List
-from models.models import Listing
+from backend.models.models import Listing
 import os
 
 class TrustState(TypedDict):
