@@ -15,7 +15,7 @@ class Database:
                 api_key=os.getenv("OPENAI_API_KEY"),
                 model_name="text-embedding-ada-002"
             )
-            self.chroma_client = chromadb.PersistentClient(path="./chroma_db")
+            self.chroma_client = chromadb.PersistentClient(path="./chroma_db", settings=Settings(anonymized_telemetry=False))
             self.collection = self.chroma_client.get_or_create_collection(
                 name="listings_openai",
                 embedding_function=openai_ef
