@@ -11,6 +11,7 @@ class Database:
         self.conn = sqlite3.connect('roommate.db')
         self.create_tables()
         try:
+            os.environ["CHROMA_TELEMETRY_ENABLED"] = "false"
             openai_ef = embedding_functions.OpenAIEmbeddingFunction(
                 api_key=os.getenv("OPENAI_API_KEY"),
                 model_name="text-embedding-ada-002"
