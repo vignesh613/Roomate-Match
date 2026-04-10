@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roommate Match - Chennai Housing Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <style>
+        .tab-active {
+            background-color: #2563eb;
+            color: white;
+        }
+        .tab-inactive {
+            background-color: #e5e7eb;
+            color: #374151;
+        }
+        .tab-inactive:hover {
+            background-color: #d1d5db;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .animate-fade-in {
+            animation: fadeIn 0.6s ease-out forwards;
+            opacity: 0;
+        }
+        
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.3); }
+            50% { box-shadow: 0 0 30px rgba(59, 130, 246, 0.6); }
+        }
+        
+        .animate-pulse-glow {
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .glass-effect {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .dark .glass-effect {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .floating-animation {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 min-h-screen transition-colors duration-300">
+    <!-- Header -->
+    <header class="gradient-bg shadow-lg transition-all duration-300 floating-animation">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-lg animate-pulse-glow">
+                        <i data-lucide="home" class="w-7 h-7 text-blue-600"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-3xl font-bold text-white">Roommate Match</h1>
+                        <p class="text-blue-100 text-sm">Chennai's Premier Housing Platform</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button id="theme-toggle" class="p-3 rounded-xl glass-effect hover:bg-white/20 transition-all duration-200">
+                        <i data-lucide="sun" class="w-5 h-5 text-white"></i>
+                    </button>
+                    <div class="hidden md:flex flex-col items-end">
+                        <p class="text-white font-medium">Find your perfect roommate</p>
+                        <p class="text-blue-100 text-sm">Siruseri IT Park • Fast & Secure</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <nav class="bg-white dark:bg-gray-800 shadow-lg transition-colors duration-300">
+        <div class="container mx-auto px-4">
+            <div class="flex space-x-1 overflow-x-auto py-2">
+                <button id="tab-search" class="tab-active flex-1 py-4 px-4 text-center font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 shadow-md">
+                    <i data-lucide="search" class="w-5 h-5 inline mr-2"></i>
+                    <span class="hidden sm:inline">Find Roommates</span>
+                </button>
+                <button id="tab-post" class="tab-inactive flex-1 py-4 px-4 text-center font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 shadow-sm hover:shadow-md">
+                    <i data-lucide="plus-circle" class="w-5 h-5 inline mr-2"></i>
+                    <span class="hidden sm:inline">Post Listing</span>
+                </button>
+                <button id="tab-matches" class="tab-inactive flex-1 py-4 px-4 text-center font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 shadow-sm hover:shadow-md">
+                    <i data-lucide="heart" class="w-5 h-5 inline mr-2"></i>
+                    <span class="hidden sm:inline">My Matches</span>
+                </button>
+                <button id="tab-saved" class="tab-inactive flex-1 py-4 px-4 text-center font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 shadow-sm hover:shadow-md">
+                    <i data-lucide="bookmark" class="w-5 h-5 inline mr-2"></i>
+                    <span class="hidden sm:inline">Saved</span>
+                </button>
+                <button id="tab-chat" class="tab-inactive flex-1 py-4 px-4 text-center font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 shadow-sm hover:shadow-md">
+                    <i data-lucide="message-circle" class="w-5 h-5 inline mr-2"></i>
+                    <span class="hidden sm:inline">Messages</span>
+                </button>
+                <button id="tab-notifications" class="tab-inactive flex-1 py-4 px-4 text-center font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 shadow-sm hover:shadow-md">
+                    <i data-lucide="bell" class="w-5 h-5 inline mr-2"></i>
+                    <span class="hidden sm:inline">Alerts</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <div id="content" class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 transition-colors duration-300">
+            <!-- Content will be loaded here -->
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 dark:bg-gray-900 text-white py-8 mt-12 transition-colors duration-300">
+        <div class="container mx-auto px-4 text-center">
+            <p>&copy; 2026 Roommate Match. Connecting Chennai's working professionals.</p>
+            <div class="mt-4 flex justify-center space-x-6">
+                <a href="#" class="text-gray-400 hover:text-white transition-colors">Privacy Policy</a>
+                <a href="#" class="text-gray-400 hover:text-white transition-colors">Terms of Service</a>
+                <a href="#" class="text-gray-400 hover:text-white transition-colors">Contact Us</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Tab content
+        const tabContents = {
+            search: `
+                <div class="max-w-2xl mx-auto">
+                    <div class="text-center mb-8">
+                        <h2 class="text-4xl font-bold text-gray-800 dark:text-white mb-4">Find Your Perfect Roommate</h2>
+                        <p class="text-lg text-gray-600 dark:text-gray-300">Connect with verified roommates in Chennai's premium locations</p>
+                    </div>
+                    <div class="bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-gray-800 dark:via-blue-900 dark:to-purple-900 p-8 rounded-2xl shadow-xl border border-blue-100 dark:border-gray-700">
+                        <form id="searchForm" class="space-y-6">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div class="space-y-2">
+                                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                                        <i data-lucide="dollar-sign" class="w-4 h-4 inline mr-1"></i>
+                                        Monthly Budget (₹)
+                                    </label>
+                                    <input type="number" id="budget" placeholder="8000" class="w-full px-4 py-4 border-2 border-gray-200 dark:border-gray-600 rounded-xl focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-lg" required>
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                                        <i data-lucide="map-pin" class="w-4 h-4 inline mr-1"></i>
+                                        Location
+                                    </label>
+                                    <select id="location" class="w-full px-4 py-4 border-2 border-gray-200 dark:border-gray-600 rounded-xl focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-lg">
+                                        <option value="">Any Location</option>
+                                        <option value="Siruseri">Siruseri</option>
+                                        <option value="Navalur">Navalur</option>
+                                        <option value="Kelambakkam">Kelambakkam</option>
+                                        <option value="Sholinganallur">Sholinganallur</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="space-y-2">
+                                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                                    <i data-lucide="coffee" class="w-4 h-4 inline mr-1"></i>
+                                    Lifestyle Preferences
+                                </label>
+                                <input type="text" id="lifestyle" placeholder="e.g., Non-smoking, Vegetarian, Early riser, Pet-friendly" class="w-full px-4 py-4 border-2 border-gray-200 dark:border-gray-600 rounded-xl focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-lg" required>
+                            </div>
+                            <div class="space-y-2">
+                                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                                    <i data-lucide="clock" class="w-4 h-4 inline mr-1"></i>
+                                    Move-in Urgency
+                                </label>
+                                <select id="urgency" class="w-full px-4 py-4 border-2 border-gray-200 dark:border-gray-600 rounded-xl focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-lg" required>
+                                    <option value="Flexible">Flexible</option>
+                                    <option value="Immediate">Immediate Move-in (48 hrs)</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="w-full bg-gradient-to-r from-blue-600 via-purple-600 to-blue-700 hover:from-blue-700 hover:via-purple-700 hover:to-blue-800 text-white font-bold py-4 px-8 rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-xl text-lg flex items-center justify-center shadow-lg">
+                                <i data-lucide="search" class="w-6 h-6 mr-3"></i>
+                                Find Perfect Matches
+                            </button>
+                        </form>
+                    </div>
+                    <div id="results" class="space-y-6 mt-8"></div>
+                </div>
+            `,
+            post: `
+                <div class="max-w-2xl mx-auto">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">Post Your Listing</h2>
+                    <div class="bg-gradient-to-r from-green-50 to-emerald-50 p-6 rounded-lg">
+                        <form id="postForm" class="space-y-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Location</label>
+                                    <select id="location" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent" required>
+                                        <option value="Siruseri">Siruseri</option>
+                                        <option value="Navalur">Navalur</option>
+                                        <option value="Kelambakkam">Kelambakkam</option>
+                                        <option value="Sholinganallur">Sholinganallur</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Monthly Rent (₹)</label>
+                                    <input type="number" id="rent" placeholder="7000" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent" required>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Security Deposit (₹)</label>
+                                    <input type="number" id="deposit" placeholder="20000" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent" required>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Number of Roommates</label>
+                                    <input type="number" id="numRoommates" placeholder="2" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent" required>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Vacancy Count</label>
+                                    <input type="number" id="vacancy" placeholder="1" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent" required>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Move-in Urgency</label>
+                                    <select id="urgency" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent" required>
+                                        <option value="Flexible">Flexible</option>
+                                        <option value="Immediate Move-in (48 hrs)">Immediate Move-in (48 hrs)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Lifestyle Tags (comma separated)</label>
+                                <input type="text" id="tags" placeholder="Non-smoking, Vegetarian, Pet-friendly" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent" required>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Contact Information</label>
+                                <input type="email" id="contact" placeholder="your.email@example.com" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent" required>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                                <textarea id="description" rows="4" placeholder="Describe your place, amenities, and what you're looking for in a roommate..." class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent" required></textarea>
+                            </div>
+                            <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg transition duration-200 flex items-center justify-center">
+                                <i data-lucide="plus-circle" class="w-5 h-5 mr-2"></i>
+                                Post Listing
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            `,
+            matches: `
+                <div class="max-w-4xl mx-auto">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">Your Perfect Matches</h2>
+                    <div class="bg-gradient-to-r from-pink-50 to-rose-50 p-6 rounded-lg mb-6">
+                        <p class="text-gray-600 text-center">Your personalized roommate recommendations will appear here.</p>
+                    </div>
+                    <div id="matchesList" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+                </div>
+            `,
+            saved: `
+                <div class="max-w-4xl mx-auto">
+                    <h2 class="text-3xl font-bold text-gray-800 dark:text-white mb-6 text-center">Saved Searches & Listings</h2>
+                    <div class="bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900 dark:to-orange-900 p-6 rounded-lg mb-6">
+                        <h3 class="text-xl font-semibold text-gray-800 dark:text-white mb-4">Saved Searches</h3>
+                        <div class="space-y-3">
+                            <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm border">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800 dark:text-white">Budget: ₹8,000, Non-smoking</h4>
+                                        <p class="text-sm text-gray-600 dark:text-gray-300">Siruseri area • Flexible timing</p>
+                                    </div>
+                                    <div class="flex space-x-2">
+                                        <button class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm">Run Search</button>
+                                        <button class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-sm">Delete</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-gradient-to-r from-green-50 to-teal-50 dark:from-green-900 dark:to-teal-900 p-6 rounded-lg">
+                        <h3 class="text-xl font-semibold text-gray-800 dark:text-white mb-4">Saved Listings</h3>
+                        <div class="space-y-3">
+                            <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm border">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800 dark:text-white">Siruseri - ₹7,500/month</h4>
+                                        <p class="text-sm text-gray-600 dark:text-gray-300">2 roommates • Immediate move-in</p>
+                                    </div>
+                                    <div class="flex space-x-2">
+                                        <button class="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-sm">View</button>
+                                        <button class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-sm">Unsave</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `,
+            notifications: `
+                <div class="max-w-4xl mx-auto">
+                    <h2 class="text-3xl font-bold text-gray-800 dark:text-white mb-6 text-center">Notifications & Alerts</h2>
+                    <div class="bg-gradient-to-r from-red-50 to-pink-50 dark:from-red-900 dark:to-pink-900 p-6 rounded-lg">
+                        <div class="space-y-4">
+                            <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm border border-red-200 dark:border-red-700">
+                                <div class="flex items-start space-x-3">
+                                    <div class="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center">
+                                        <i data-lucide="alert-triangle" class="w-4 h-4 text-white"></i>
+                                    </div>
+                                    <div class="flex-1">
+                                        <h4 class="font-semibold text-gray-800 dark:text-white">New Match Available!</h4>
+                                        <p class="text-sm text-gray-600 dark:text-gray-300">A new listing matches your saved search for Siruseri area.</p>
+                                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">2 hours ago</p>
+                                    </div>
+                                    <button class="text-blue-600 hover:text-blue-800 dark:text-blue-400">View</button>
+                                </div>
+                            </div>
+                            <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm border">
+                                <div class="flex items-start space-x-3">
+                                    <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+                                        <i data-lucide="message-circle" class="w-4 h-4 text-white"></i>
+                                    </div>
+                                    <div class="flex-1">
+                                        <h4 class="font-semibold text-gray-800 dark:text-white">Message from John Doe</h4>
+                                        <p class="text-sm text-gray-600 dark:text-gray-300">Hi! I'm interested in your listing...</p>
+                                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">1 day ago</p>
+                                    </div>
+                                    <button class="text-blue-600 hover:text-blue-800 dark:text-blue-400">Reply</button>
+                                </div>
+                            </div>
+                            <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm border">
+                                <div class="flex items-start space-x-3">
+                                    <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+                                        <i data-lucide="check-circle" class="w-4 h-4 text-white"></i>
+                                    </div>
+                                    <div class="flex-1">
+                                        <h4 class="font-semibold text-gray-800 dark:text-white">Listing Approved</h4>
+                                        <p class="text-sm text-gray-600 dark:text-gray-300">Your listing has been verified and is now live!</p>
+                                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">3 days ago</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `
+        };
+
+        // Tab switching functionality
+        function switchTab(tabId) {
+            // Update tab styles
+            document.querySelectorAll('button[id^="tab-"]').forEach(btn => {
+                btn.className = btn.className.replace('tab-active', 'tab-inactive');
+            });
+            document.getElementById(tabId).className = document.getElementById(tabId).className.replace('tab-inactive', 'tab-active');
+
+            // Load content
+            const contentKey = tabId.replace('tab-', '');
+            document.getElementById('content').innerHTML = tabContents[contentKey];
+            lucide.createIcons();
+
+            // Setup form handlers
+            if (contentKey === 'search') setupSearch();
+            if (contentKey === 'post') setupPost();
+            if (contentKey === 'matches') loadMatches();
+        }
+
+        // Dark mode toggle
+        function toggleTheme() {
+            const html = document.documentElement;
+            const themeIcon = document.querySelector('#theme-toggle i');
+            
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                themeIcon.setAttribute('data-lucide', 'sun');
+            } else {
+                html.classList.add('dark');
+                themeIcon.setAttribute('data-lucide', 'moon');
+            }
+            lucide.createIcons();
+            
+            // Save preference
+            localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light');
+        }
+
+        // Load saved theme
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.documentElement.classList.add('dark');
+                document.querySelector('#theme-toggle i').setAttribute('data-lucide', 'moon');
+            }
+        }
+
+        function setupSearch() {
+            document.getElementById('searchForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                // Show loading state
+                const resultsDiv = document.getElementById('results');
+                resultsDiv.innerHTML = `
+                    <div class="flex items-center justify-center py-12">
+                        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+                        <span class="ml-3 text-gray-600 dark:text-gray-300">Finding your perfect matches...</span>
+                    </div>
+                `;
+                
+                const budget = document.getElementById('budget').value;
+                const lifestyle = document.getElementById('lifestyle').value;
+                const urgency = document.getElementById('urgency').value;
+                const location = document.getElementById('location').value;
+
+                try {
+                    const response = await fetch('/match', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ budget: parseInt(budget), lifestyle, urgency, location })
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    
+                    const matches = await response.json();
+
+                    if (matches.length === 0) {
+                        resultsDiv.innerHTML = `
+                            <div class="text-center py-12">
+                                <i data-lucide="search-x" class="w-16 h-16 text-gray-400 mx-auto mb-4"></i>
+                                <h3 class="text-xl font-semibold text-gray-800 dark:text-white mb-2">No matches found</h3>
+                                <p class="text-gray-600 dark:text-gray-300 mb-4">Try adjusting your budget or preferences.</p>
+                                <button onclick="document.getElementById('searchForm').scrollIntoView()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition duration-200">
+                                    Adjust Search
+                                </button>
+                            </div>
+                        `;
+                    } else {
+                        resultsDiv.innerHTML = matches.map((match, index) => `
+                            <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 animate-fade-in" style="animation-delay: ${index * 0.1}s">
+                                <div class="flex justify-between items-start mb-4">
+                                    <div class="flex-1">
+                                        <div class="flex items-center mb-2">
+                                            <h3 class="text-xl font-bold text-gray-800 dark:text-white mr-3">${match.listing.location}</h3>
+                                            <span class="px-3 py-1 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 rounded-full text-sm font-medium">
+                                                ${match.listing.urgency}
+                                            </span>
+                                        </div>
+                                        <p class="text-3xl font-bold text-blue-600 dark:text-blue-400 mb-2">₹${match.listing.rent.toLocaleString()}<span class="text-sm font-normal text-gray-500">/month</span></p>
+                                        <div class="flex items-center space-x-4 text-sm text-gray-600 dark:text-gray-300 mb-3">
+                                            <span class="flex items-center">
+                                                <i data-lucide="users" class="w-4 h-4 mr-1"></i>
+                                                ${match.listing.num_roommates} roommates
+                                            </span>
+                                            <span class="flex items-center">
+                                                <i data-lucide="map-pin" class="w-4 h-4 mr-1"></i>
+                                                ${match.listing.vacancy_count} vacancy
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <div class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg font-semibold text-lg">
+                                            <i data-lucide="star" class="w-5 h-5 mr-1"></i>
+                                            ${Math.round(match.score)}%
+                                        </div>
+                                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Match Score</p>
+                                    </div>
+                                </div>
+                                
+                                <p class="text-gray-700 dark:text-gray-300 mb-4 leading-relaxed">${match.listing.description}</p>
+                                
+                                <div class="flex flex-wrap gap-2 mb-4">
+                                    ${match.listing.lifestyle_tags.split(', ').map(tag => 
+                                        `<span class="inline-flex items-center px-3 py-1 bg-gradient-to-r from-indigo-100 to-purple-100 dark:from-indigo-900 dark:to-purple-900 text-indigo-800 dark:text-indigo-200 rounded-full text-sm font-medium">
+                                            <i data-lucide="tag" class="w-3 h-3 mr-1"></i>
+                                            ${tag}
+                                        </span>`
+                                    ).join('')}
+                                </div>
+                                
+                                <div class="flex justify-between items-center pt-4 border-t border-gray-200 dark:border-gray-700">
+                                    <div class="text-sm text-gray-600 dark:text-gray-400">
+                                        <i data-lucide="info" class="w-4 h-4 inline mr-1"></i>
+                                        ${match.explanation}
+                                    </div>
+                                    <div class="flex space-x-2">
+                                        <button onclick="saveListing(event, ${match.listing.id})" class="flex items-center px-4 py-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg transition duration-200">
+                                            <i data-lucide="bookmark" class="w-4 h-4 mr-1"></i>
+                                            Save
+                                        </button>
+                                        <button onclick="connect('${match.listing.contact_info}', '${match.listing.location}')" class="flex items-center px-6 py-2 bg-gradient-to-r from-green-500 to-blue-600 hover:from-green-600 hover:to-blue-700 text-white rounded-lg transition duration-200 font-medium">
+                                            <i data-lucide="message-circle" class="w-4 h-4 mr-2"></i>
+                                            Connect
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('');
+                        lucide.createIcons();
+                    }
+                } catch (error) {
+                    console.error('Search error:', error);
+                    resultsDiv.innerHTML = `
+                        <div class="text-center py-12">
+                            <i data-lucide="alert-triangle" class="w-16 h-16 text-red-400 mx-auto mb-4"></i>
+                            <h3 class="text-xl font-semibold text-gray-800 dark:text-white mb-2">Search temporarily unavailable</h3>
+                            <p class="text-gray-600 dark:text-gray-300 mb-4">Please try again in a moment or check your connection.</p>
+                            <button onclick="setupSearch(); document.getElementById('searchForm').dispatchEvent(new Event('submit'))" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition duration-200">
+                                <i data-lucide="refresh-cw" class="w-4 h-4 mr-1 inline"></i>
+                                Retry Search
+                            </button>
+                        </div>
+                    `;
+                    lucide.createIcons();
+                }
+            });
+        }
+
+        function setupPost() {
+            document.getElementById('postForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const listing = {
+                    id: Date.now(),
+                    location: document.getElementById('location').value,
+                    rent: parseInt(document.getElementById('rent').value),
+                    deposit: parseInt(document.getElementById('deposit').value),
+                    num_roommates: parseInt(document.getElementById('numRoommates').value),
+                    vacancy_count: parseInt(document.getElementById('vacancy').value),
+                    lifestyle_tags: document.getElementById('tags').value,
+                    contact_info: document.getElementById('contact').value,
+                    urgency: document.getElementById('urgency').value,
+                    trust_score: 85, // Mock trust score
+                    description: document.getElementById('description').value
+                };
+
+                try {
+                    const response = await fetch('/listings', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(listing)
+                    });
+
+                    if (response.ok) {
+                        alert('Listing posted successfully!');
+                        document.getElementById('postForm').reset();
+                    } else {
+                        alert('Error posting listing. Please try again.');
+                    }
+                } catch (error) {
+                    alert('Error posting listing. Please check your connection.');
+                }
+            });
+        }
+
+        function loadMatches() {
+            // This would load user's saved matches
+            document.getElementById('matchesList').innerHTML = '<div class="text-center text-gray-500 py-8">Your matches will appear here after searching.</div>';
+        }
+
+        function connect(contact, location) {
+            // Enhanced connection with location info
+            const message = `Hi! I'm interested in your ${location} listing. Can we discuss the details?`;
+            const whatsappUrl = `https://wa.me/${contact.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(message)}`;
+            
+            // Show a nice modal instead of alert
+            const modal = document.createElement('div');
+            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+            modal.innerHTML = `
+                <div class="bg-white dark:bg-gray-800 rounded-2xl p-8 max-w-md mx-4 shadow-2xl">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i data-lucide="message-circle" class="w-8 h-8 text-green-600 dark:text-green-400"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-2">Connect with Roommate</h3>
+                        <p class="text-gray-600 dark:text-gray-300 mb-6">Ready to start a conversation about the ${location} listing?</p>
+                        <div class="flex space-x-3">
+                            <button onclick="this.closest('.fixed').remove()" class="flex-1 px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition duration-200">
+                                Cancel
+                            </button>
+                            <a href="${whatsappUrl}" target="_blank" onclick="this.closest('.fixed').remove()" class="flex-1 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition duration-200 flex items-center justify-center">
+                                <i data-lucide="message-circle" class="w-4 h-4 mr-2"></i>
+                                WhatsApp
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            lucide.createIcons();
+        }
+
+        function saveListing(event, listingId) {
+            // Save to localStorage for demo
+            let saved = JSON.parse(localStorage.getItem('savedListings') || '[]');
+            const button = event.target.closest('button');
+            const originalText = button.innerHTML;
+
+            if (!saved.includes(listingId)) {
+                saved.push(listingId);
+                localStorage.setItem('savedListings', JSON.stringify(saved));
+                
+                button.innerHTML = '<i data-lucide="check" class="w-4 h-4 mr-1"></i> Saved!';
+                button.classList.add('bg-green-100', 'dark:bg-green-900', 'text-green-700', 'dark:text-green-300');
+                button.classList.remove('bg-gray-100', 'dark:bg-gray-700', 'hover:bg-gray-200', 'dark:hover:bg-gray-600', 'text-gray-700', 'dark:text-gray-300');
+                lucide.createIcons();
+                
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                    button.classList.remove('bg-green-100', 'dark:bg-green-900', 'text-green-700', 'dark:text-green-300');
+                    button.classList.add('bg-gray-100', 'dark:bg-gray-700', 'hover:bg-gray-200', 'dark:hover:bg-gray-600', 'text-gray-700', 'dark:text-gray-300');
+                    lucide.createIcons();
+                }, 2000);
+            } else {
+                // Already saved - unsave
+                saved = saved.filter(id => id !== listingId);
+                localStorage.setItem('savedListings', JSON.stringify(saved));
+                
+                button.innerHTML = '<i data-lucide="bookmark-x" class="w-4 h-4 mr-1"></i> Unsaved';
+                button.classList.add('bg-red-100', 'dark:bg-red-900', 'text-red-700', 'dark:text-red-300');
+                button.classList.remove('bg-gray-100', 'dark:bg-gray-700', 'hover:bg-gray-200', 'dark:hover:bg-gray-600', 'text-gray-700', 'dark:text-gray-300');
+                lucide.createIcons();
+                
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                    button.classList.remove('bg-red-100', 'dark:bg-red-900', 'text-red-700', 'dark:text-red-300');
+                    button.classList.add('bg-gray-100', 'dark:bg-gray-700', 'hover:bg-gray-200', 'dark:hover:bg-gray-600', 'text-gray-700', 'dark:text-gray-300');
+                    lucide.createIcons();
+                }, 2000);
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            loadTheme();
+            switchTab('tab-search');
+
+            // Tab event listeners
+            document.getElementById('tab-search').addEventListener('click', () => switchTab('tab-search'));
+            document.getElementById('tab-post').addEventListener('click', () => switchTab('tab-post'));
+            document.getElementById('tab-matches').addEventListener('click', () => switchTab('tab-matches'));
+            document.getElementById('tab-saved').addEventListener('click', () => switchTab('tab-saved'));
+            document.getElementById('tab-chat').addEventListener('click', () => switchTab('tab-chat'));
+            document.getElementById('tab-notifications').addEventListener('click', () => switchTab('tab-notifications'));
+            
+            // Theme toggle
+            document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
+        });
+    </script>
+</body>
+</html>
