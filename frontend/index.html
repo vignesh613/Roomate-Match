@@ -426,7 +426,7 @@
                 const location = document.getElementById('location').value;
 
                 try {
-                    const response = await fetch('/match', {
+                    const response = await fetch('/api/match', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ budget: parseInt(budget), lifestyle, urgency, location })
