@@ -8,11 +8,6 @@ import os
 
 router = APIRouter()
 
-@router.on_event("startup")
-async def startup_event():
-    db.load_mock_data()
-    pass
-
 @router.get("/listings")
 async def get_listings():
     return db.get_all_listings()

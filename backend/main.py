@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from backend.routes.api import router as api_router
+from backend.db.database import db
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -20,3 +21,7 @@ app.add_middleware(
 app.mount("/", StaticFiles(directory="frontend", html=True), name="frontend")
 
 app.include_router(api_router)
+
+@app.on_event("startup")
+async def startup_event():
+    db.load_mock_data()
