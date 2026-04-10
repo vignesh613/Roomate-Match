@@ -6,5 +6,5 @@ langgraph==0.0.40
 chromadb==0.4.24
 pandas==2.2.1
 numpy==1.26.4
-pydantic==2.7.1
+pydantic==1.10.14
 python-dotenv==1.0.0
